@@ -32,6 +32,14 @@
     state: present
   notify: restart docker
 
+- name: Add admin users to docker group
+  user:
+    name: '{{ item }}'
+    groups: docker
+    append: yes
+  with_items: '{{ docker_ce_admin_users }}'
+  notify: restart docker
+
 - name: Enable and start service
   service:
     name: docker

@@ -1,0 +1,4 @@
+---
+
+# List of OS-level users with access to docker daemon
+docker_ce_admin_users: []
