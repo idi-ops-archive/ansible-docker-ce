@@ -1,0 +1,39 @@
+---
+
+- name: Remove old versions
+  package:
+    name: '{{ item }}'
+    state: absent
+  with_items:
+    - docker
+    - docker-common
+    - docker-engine
+  register: remove_old_docker
+
+- name: Remove old container data
+  file:
+    path: /var/lib/docker
+    state: absent
+  when: remove_old_docker|changed
+  tags: ['skip_ansible_lint']  # ANSIBLE0016 is not useful
+
+- name: Enable repository (stable)
+  yum_repository:
+    name: docker-ce-stable
+    description: 'Docker CE Stable - $basearch'
+    baseurl: https://download.docker.com/linux/centos/7/$basearch/stable
+    gpgkey: https://download.docker.com/linux/centos/gpg
+    enabled: true
+    gpgcheck: true
+
+- name: Install packages
+  package:
+    name: docker-ce
+    state: present
+  notify: restart docker
+
+- name: Enable and start service
+  service:
+    name: docker
+    state: started
+    enabled: true
