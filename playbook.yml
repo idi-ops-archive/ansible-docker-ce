@@ -1,4 +1,4 @@
 ---
 - hosts: all
   roles:
-    - role: docker
+    - role: ansible-docker-ce
