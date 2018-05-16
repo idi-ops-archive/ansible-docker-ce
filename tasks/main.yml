@@ -14,7 +14,7 @@
   file:
     path: /var/lib/docker
     state: absent
-  when: remove_old_docker|changed
+  when: remove_old_docker is changed
   tags: ['skip_ansible_lint']  # ANSIBLE0016 is not useful
 
 - name: Enable repository (stable)
